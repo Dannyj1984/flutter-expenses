@@ -17,4 +17,9 @@ class Expense {
   final double amount;
   final DateTime date;
   final Category category;
+
+  @override
+  String toString() {
+    return 'Expense(title: $title, amount: $amount, date: $date, category: $category)';
+  }
 }
