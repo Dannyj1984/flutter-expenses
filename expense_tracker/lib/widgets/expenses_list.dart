@@ -1,6 +1,5 @@
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/expense_item.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseList extends StatefulWidget {
@@ -33,18 +32,18 @@ class _ExpenseListState extends State<ExpenseList> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Confirm Deletion"),
+                  title: const Text("Confirm Deletion"),
                   content: Text(
                       'Are you sure you want to delete expense: ${expenses[index].title}?'),
                   actions: [
                     TextButton(
-                      child: Text("Cancel"),
+                      child: const Text("Cancel"),
                       onPressed: () {
                         Navigator.of(context).pop(false);
                       },
                     ),
                     TextButton(
-                      child: Text("Delete"),
+                      child: const Text("Delete"),
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
