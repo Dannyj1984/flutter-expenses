@@ -1,5 +1,4 @@
 import 'package:expense_tracker/models/expense.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseItem extends StatelessWidget {
@@ -15,13 +14,19 @@ class ExpenseItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(
           children: [
-            Text(
-              expense.title,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  expense.title,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Text(_formatCategory(expense.category)),
+              ],
             ),
             Row(
               children: [
-                Text('${_formatCategory(expense.category)} - '),
                 Text(
                     '£${expense.amount.toStringAsFixed(2)} on ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
               ],

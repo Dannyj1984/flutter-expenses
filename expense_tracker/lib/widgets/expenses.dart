@@ -42,6 +42,21 @@ class _ExpensesState extends State<Expenses> {
         title: 'Coffee',
         date: DateTime.parse('2024-12-07'),
         category: Category.leisure),
+    Expense(
+        amount: 3.30,
+        title: 'Coffee',
+        date: DateTime.parse('2024-12-07'),
+        category: Category.leisure),
+    Expense(
+        amount: 3.30,
+        title: 'Coffee',
+        date: DateTime.parse('2024-12-07'),
+        category: Category.leisure),
+    Expense(
+        amount: 3.30,
+        title: 'Coffee',
+        date: DateTime.parse('2024-12-07'),
+        category: Category.leisure),
   ];
 
   @override
@@ -60,6 +75,13 @@ class _ExpensesState extends State<Expenses> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: _selectedFilter == Filter.date
+                        ? Colors.blue
+                        : Colors.transparent,
+                    foregroundColor: _selectedFilter == Filter.date
+                        ? Colors.grey.shade400
+                        : const Color.fromARGB(255, 147, 70, 161)),
                 onPressed: () {
                   setState(() {
                     if (_filterDate) {
@@ -89,6 +111,13 @@ class _ExpensesState extends State<Expenses> {
                 ]),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: _selectedFilter == Filter.title
+                        ? Colors.blue
+                        : Colors.transparent,
+                    foregroundColor: _selectedFilter == Filter.title
+                        ? Colors.grey.shade400
+                        : const Color.fromARGB(255, 147, 70, 161)),
                 onPressed: () {
                   setState(() {
                     if (_filterTitle) {
@@ -122,6 +151,13 @@ class _ExpensesState extends State<Expenses> {
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: _selectedFilter == Filter.category
+                        ? Colors.blue
+                        : Colors.transparent,
+                    foregroundColor: _selectedFilter == Filter.category
+                        ? Colors.grey.shade400
+                        : const Color.fromARGB(255, 147, 70, 161)),
                 onPressed: () {
                   setState(() {
                     if (_filterCategory) {
