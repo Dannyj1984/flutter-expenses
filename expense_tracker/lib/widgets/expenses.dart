@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:expense_tracker/widgets/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 enum Filter { date, title, category }
 
@@ -21,6 +25,8 @@ class _ExpensesState extends State<Expenses> {
   bool _filterTitle = true;
   bool _filterCategory = true;
   Filter _selectedFilter = Filter.date;
+  Category? _selectedCategory;
+  late Future<int?> _value;
   final List<Expense> expenses = [
     Expense(
         amount: 2.50,
@@ -58,11 +64,32 @@ class _ExpensesState extends State<Expenses> {
         date: DateTime.parse('2024-12-07'),
         category: Category.leisure),
   ];
+  var _filteredExpenses = <Expense>[];
 
   @override
   void initState() {
+    _value = _getValue();
     super.initState();
     _sortedExpenses = [...expenses];
+  }
+
+  void _openAddExpenseOverlay() {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return const NewExpense();
+        });
+  }
+
+  Future<int?> _getValue() async {
+    var res = await http.get(
+        Uri.parse('https://6f1531b8bdd4433eb234718b6e9083f6.api.mockbin.io/'));
+    if (res.statusCode == 200) {
+      var data = jsonDecode(res.body);
+      return data["number"];
+    } else {
+      throw Exception('Failed to load album');
+    }
   }
 
   Expense _newExpense() {
@@ -74,7 +101,7 @@ class _ExpensesState extends State<Expenses> {
   }
 
   double _randomAmount() {
-    return Random().nextDouble() * 1000;
+    return Random().nextDouble() * 100;
   }
 
   Category _randomCategory() {
@@ -218,16 +245,67 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
+  Row _filterOptions() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: DropdownButton<Category>(
+            value: _selectedCategory,
+            iconSize: 24,
+            isExpanded: true,
+            isDense: true,
+            hint: const Text('Select'),
+            onChanged: (Category? newValue) {
+              setState(() {
+                _selectedCategory = newValue;
+                _filteredExpenses = expenses
+                    .where((element) => element.category == _selectedCategory)
+                    .toList();
+              });
+            },
+            items: [
+              const DropdownMenuItem<Category>(
+                value: null,
+                child: Text('Select All'),
+              ),
+              ...Category.values
+                  .map<DropdownMenuItem<Category>>((Category category) {
+                return DropdownMenuItem<Category>(
+                  value: category,
+                  child: Text(category.name),
+                );
+              }),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: _openAddExpenseOverlay, icon: const Icon(Icons.add))
+        ],
+        title: const Text('Expenses'),
+      ),
       body: Column(
         children: [
-          const SizedBox(height: 200, child: Text("Expenses")),
+          const SizedBox(height: 20),
           _buttons(),
-          _addButton(),
+          const SizedBox(height: 20),
+          _filterOptions(),
+          const SizedBox(height: 20),
           Expanded(
-            child: ExpenseList(expenses: _sortedExpenses),
+            child: ExpenseList(
+                expenses: _filteredExpenses.isNotEmpty
+                    ? _filteredExpenses
+                    : _sortedExpenses),
           ),
         ],
       ),
