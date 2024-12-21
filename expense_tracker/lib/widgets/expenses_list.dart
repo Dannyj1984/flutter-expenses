@@ -25,7 +25,7 @@ class _ExpenseListState extends State<ExpenseList> {
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return Dismissible(
-          key: Key(expenses[index].id.toString()),
+          key: Key(expenses[index].title.toString()),
           direction: DismissDirection.startToEnd,
           confirmDismiss: (direction) async {
             return await showDialog(
