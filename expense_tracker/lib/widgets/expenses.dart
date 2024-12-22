@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:expense_tracker/providers/data.dart';
 import 'package:expense_tracker/widgets/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
@@ -25,7 +23,7 @@ class _ExpensesState extends State<Expenses> {
   bool _filterCategory = true;
   Filter _selectedFilter = Filter.date;
   Category? _selectedCategory;
-  late List<Expense> _value;
+  late List<Expense> _value = [];
 
   var _filteredExpenses = <Expense>[];
 
@@ -38,32 +36,27 @@ class _ExpensesState extends State<Expenses> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final dataProvider = Provider.of<DataProvider>(context);
-    _value = dataProvider.data;
-    _sortedExpenses = [..._value];
+    if (_value.isEmpty) {
+      // Add this condition
+      _value = dataProvider.data;
+      _sortedExpenses = [..._value];
+    }
+  }
+
+  _addExpense(Expense expense) {
+    setState(() {
+      _sortedExpenses.add(expense);
+      print(_sortedExpenses.toList());
+    });
   }
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (ctx) {
-          return const NewExpense();
+          return NewExpense(onAddExpense: _addExpense);
         });
-  }
-
-  Expense _newExpense() {
-    return Expense(
-        title: 'New Expense',
-        amount: _randomAmount(),
-        date: DateTime.now(),
-        category: _randomCategory());
-  }
-
-  double _randomAmount() {
-    return Random().nextDouble() * 100;
-  }
-
-  Category _randomCategory() {
-    return Category.values[Random().nextInt(Category.values.length)];
   }
 
   Row _buttons() {
@@ -184,21 +177,6 @@ class _ExpensesState extends State<Expenses> {
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  Row _addButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _sortedExpenses.add(_newExpense());
-              });
-            },
-            child: const Text("Add"))
       ],
     );
   }

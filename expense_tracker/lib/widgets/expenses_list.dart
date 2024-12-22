@@ -25,7 +25,7 @@ class _ExpenseListState extends State<ExpenseList> {
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return Dismissible(
-          key: Key(expenses[index].title.toString()),
+          key: Key(expenses[index].id.toString()),
           direction: DismissDirection.startToEnd,
           confirmDismiss: (direction) async {
             return await showDialog(
@@ -54,9 +54,17 @@ class _ExpenseListState extends State<ExpenseList> {
             );
           },
           onDismissed: (direction) {
+            var removed;
             setState(() {
-              expenses.removeAt(index);
+              removed = expenses.removeAt(index);
             });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                duration: const Duration(seconds: 1),
+                backgroundColor: Colors.green,
+                content: Text('Expense ${removed.title} deleted!'),
+              ),
+            );
           },
           background: Container(
             color: Colors.red,
