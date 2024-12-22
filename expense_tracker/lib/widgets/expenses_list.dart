@@ -60,9 +60,16 @@ class _ExpenseListState extends State<ExpenseList> {
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 3),
                 backgroundColor: Colors.green,
                 content: Text('Expense ${removed.title} deleted!'),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () => setState(() {
+                    expenses.insert(index, removed);
+                  }),
+                  textColor: Colors.white,
+                ),
               ),
             );
           },
