@@ -46,7 +46,6 @@ class _ExpensesState extends State<Expenses> {
   _addExpense(Expense expense) {
     setState(() {
       _sortedExpenses.add(expense);
-      print(_sortedExpenses.toList());
     });
   }
 
@@ -222,29 +221,44 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: _openAddExpenseOverlay, icon: const Icon(Icons.add))
-        ],
-        title: const Text('Expenses'),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          _buttons(),
-          const SizedBox(height: 20),
-          _filterOptions(),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ExpenseList(
-                expenses: _filteredExpenses.isNotEmpty
-                    ? _filteredExpenses
-                    : _sortedExpenses),
-          ),
-        ],
-      ),
-    );
+    return _sortedExpenses.isNotEmpty
+        ? Scaffold(
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                    onPressed: _openAddExpenseOverlay,
+                    icon: const Icon(Icons.add))
+              ],
+              title: const Text('Expenses'),
+            ),
+            body: Column(
+              children: [
+                const SizedBox(height: 20),
+                _buttons(),
+                const SizedBox(height: 20),
+                _filterOptions(),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ExpenseList(
+                      expenses: _filteredExpenses.isNotEmpty
+                          ? _filteredExpenses
+                          : _sortedExpenses),
+                ),
+              ],
+            ),
+          )
+        : Container(
+            color: Theme.of(context)
+                .colorScheme
+                .tertiary, // Light grey background with some transparency
+            child: const Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.grey,
+                color: Colors.blue,
+                semanticsLabel: 'Loading expenses...',
+                semanticsValue: 'Loading',
+              ),
+            ),
+          );
   }
 }

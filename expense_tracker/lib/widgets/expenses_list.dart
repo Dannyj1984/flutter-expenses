@@ -58,6 +58,7 @@ class _ExpenseListState extends State<ExpenseList> {
             setState(() {
               removed = expenses.removeAt(index);
             });
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 duration: const Duration(seconds: 3),
@@ -74,14 +75,7 @@ class _ExpenseListState extends State<ExpenseList> {
             );
           },
           background: Container(
-            color: Colors.red,
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Icon(Icons.delete, color: Colors.white),
-              ),
-            ),
+            color: Theme.of(context).colorScheme.errorContainer,
           ),
           child: ExpenseItem(expenses[index]),
         );
